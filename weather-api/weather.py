@@ -36,13 +36,20 @@ def get_weather():
         result = {
             'city': data['name'],
             'temperature': f"{data['main']['temp']}°C",
+            'feels_like': f"{data['main']['feels_like']}°C",
             'humidity': f"{data['main']['humidity']}%",
-            'condition': data['weather'][0]['description'].capitalize()
+            'pressure': f"{data['main']['pressure']} hPa",
+            'wind_speed': f"{data['wind']['speed']} m/s",
+            'visibility': f"{data.get('visibility', 0) / 1000:.1f} km",
+            'condition': data['weather'][0]['description'].capitalize(),
+            'sunrise': data['sys']['sunrise'],
+            'date': data['dt']
         }
 
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
