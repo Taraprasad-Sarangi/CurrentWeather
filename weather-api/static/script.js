@@ -48,6 +48,82 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error(err);
         alert("Failed to fetch weather data.");
       }
+      // Get forecast data too
+      const forecastRes = await fetch(
+        `/forecast?city=${encodeURIComponent(city)}`,
+      );
+      const forecastData = await forecastRes.json();
+
+      if (!forecastRes.ok) {
+        alert("Error fetching forecast.");
+        return;
+      }
+
+      // === HOURLY FORECAST (next 8 time slots) ===
+      const hourlyContainer = document.querySelector(".hourly-container");
+      hourlyContainer.innerHTML = "";
+
+      forecastData.list.slice(0, 8).forEach((hour) => {
+        const time = new Date(hour.dt * 1000).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const temp = Math.round(hour.main.temp) + "°";
+        const condition = hour.weather[0].main;
+
+        const div = document.createElement("div");
+        div.className = "hourly-item";
+        div.innerHTML = `
+              <div class="hourly-time">${time}</div>
+              <div class="hourly-icon">${getWeatherIcon(condition)}</div>
+              <div class="hourly-temp">${temp}</div>
+          `;
+        hourlyContainer.appendChild(div);
+      });
+      // === DAILY FORECAST (group every 8th forecast — approx. 24h) ===
+      const forecastContainer = document.querySelector(".forecast-container");
+      forecastContainer.innerHTML = "";
+
+      for (let i = 0; i < forecastData.list.length; i += 8) {
+        const day = forecastData.list[i];
+        const date = new Date(day.dt * 1000);
+        const tempMax = Math.round(day.main.temp_max);
+        const tempMin = Math.round(day.main.temp_min);
+        const desc = day.weather[0].description;
+        const condition = day.weather[0].main;
+
+        const div = document.createElement("div");
+        div.className = "forecast-card";
+        div.innerHTML = `
+              <div class="forecast-day">${i === 0 ? "Today" : date.toLocaleDateString("en-US", { weekday: "short" })}</div>
+              <div class="forecast-icon">${getWeatherIcon(condition)}</div>
+              <div class="forecast-temp">${tempMax}° / ${tempMin}°</div>
+              <div class="forecast-desc">${desc}</div>
+          `;
+        forecastContainer.appendChild(div);
+      }
+      function getWeatherIcon(condition) {
+        switch (condition.toLowerCase()) {
+          case "clear":
+            return "☀️";
+          case "clouds":
+            return "☁️";
+          case "rain":
+            return "🌧️";
+          case "drizzle":
+            return "🌦️";
+          case "thunderstorm":
+            return "⛈️";
+          case "snow":
+            return "❄️";
+          case "mist":
+          case "haze":
+          case "fog":
+            return "🌫️";
+          default:
+            return "🌡️";
+        }
+      }
     }
   });
 });

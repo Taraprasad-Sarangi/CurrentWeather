@@ -50,6 +50,22 @@ def get_weather():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/forecast')
+def get_forecast():
+    city = request.args.get('city')
+    if not city:
+        return jsonify({'error': 'City parameter is required'}), 400
+
+    url = "https://api.openweathermap.org/data/2.5/forecast"
+    params = {'q': city, 'appid': API_KEY, 'units': 'metric'}
+    res = requests.get(url, params=params)
+
+    if res.status_code != 200:
+        return jsonify({'error': 'Failed to get forecast'}), 500
+
+    return jsonify(res.json())
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
