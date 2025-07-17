@@ -11,14 +11,31 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const statValues = document.querySelectorAll(".stat-value");
 
+  const errorMsg = document.getElementById("error-message");
+
   searchInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
       const city = searchInput.value.trim();
-      if (!city) return;
+      if (!city) {
+        errorMsg.innerText = "Please enter a city name.";
+        return;
+      }
 
       try {
         const res = await fetch(`/weather?city=${encodeURIComponent(city)}`);
         const data = await res.json();
+
+        if (!res.ok || data.error) {
+          errorMsg.innerText = data.error || "City not found.";
+          return;
+        }
+
+        errorMsg.innerText = ""; // clear error
+
+        if (!res.ok || data.error) {
+          errorMsg.innerText = data.error || "City not found";
+          return;
+        }
 
         if (res.ok) {
           // Parse Unix timestamps

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import os
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -19,6 +20,9 @@ def get_weather():
     city = request.args.get('city')
     if not city:
         return jsonify({'error': 'City parameter is required'}), 400
+
+    if not re.match(r'^[a-zA-Z\s]+$', city):
+        return jsonify({'error': 'Invalid city format'}), 400
 
     params = {
         'q': city,
@@ -55,6 +59,9 @@ def get_forecast():
     city = request.args.get('city')
     if not city:
         return jsonify({'error': 'City parameter is required'}), 400
+
+    if not re.match(r'^[a-zA-Z\s]+$', city):
+        return jsonify({'error': 'Invalid city format'}), 400
 
     url = "https://api.openweathermap.org/data/2.5/forecast"
     params = {'q': city, 'appid': API_KEY, 'units': 'metric'}
