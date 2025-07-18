@@ -1,8 +1,10 @@
+import os
+import re
+
 from flask import Flask, request, jsonify, render_template
 import requests
-import os
 from dotenv import load_dotenv
-import re
+
 
 load_dotenv()
 
@@ -11,9 +13,11 @@ app = Flask(__name__)
 API_KEY = os.getenv("WEATHER_API_KEY")
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
+
 @app.route('/')
 def index():
     return render_template('weather.html')
+
 
 @app.route('/weather')
 def get_weather():
@@ -54,6 +58,7 @@ def get_weather():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/forecast')
 def get_forecast():
     city = request.args.get('city')
@@ -71,7 +76,6 @@ def get_forecast():
         return jsonify({'error': 'Failed to get forecast'}), 500
 
     return jsonify(res.json())
-
 
 
 if __name__ == '__main__':

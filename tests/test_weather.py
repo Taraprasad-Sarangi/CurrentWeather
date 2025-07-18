@@ -1,9 +1,9 @@
 import sys
 import os
 import unittest
+from weather import app
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from weather import app
 
 
 class WeatherAppTestCase(unittest.TestCase):
