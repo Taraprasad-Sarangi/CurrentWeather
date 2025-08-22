@@ -1,0 +1,28 @@
+{
+  "family": "weather-app-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::<YOUR_ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "weather-app",
+      "image": "docker.io/taraprasadsarangi/weather-app:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000
+        }
+      ],
+      "environment": [
+        {
+          "name": "WEATHER_API_KEY",
+          "value": "${WEATHER_API_KEY}"
+        }
+      ]
+    }
+  ]
+}
+
