@@ -137,6 +137,6 @@ nose2
 ---
 
 ## 👨‍💻 Author
-**Taraprasad Sarangi**
-📧 sarangitaraprasad1@gmail.com
+**Taraprasad Sarangi**<br>
+📧 sarangitaraprasad1@gmail.com<br>
 🔗 [LinkedIn](https://www.linkedin.com/in/taraprasad-sarangi/)
